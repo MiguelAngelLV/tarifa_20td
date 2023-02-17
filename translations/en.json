@@ -10,6 +10,21 @@
     },
     "step": {
       "user": {
+        "title": "Tarifa 2.0 TD",
+        "data": {
+          "precio_llana": "Precio horas llanas",
+          "precio_valle": "Precio en horas valle",
+          "precio_punta": "Precio en horas punta",
+          "coste_dia": "Precio de costes fijos por día"
+        }
+      }
+    }
+  },
+
+  "options": {
+    "step": {
+      "init": {
+        "title": "Actualizar precios.",
         "data": {
           "precio_llana": "Precio horas llanas",
           "precio_valle": "Precio en horas valle",

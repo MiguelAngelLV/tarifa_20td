@@ -90,6 +90,7 @@ class PriceSensor(SensorEntity):
     async def async_added_to_hass(self) -> None:
         self.update_price()
 
+
     @property
     def should_poll(self):
         return False
