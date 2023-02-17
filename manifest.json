@@ -3,7 +3,7 @@
   "name": "Tarifa 2.0 TD",
   "version": "0.1.0",
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/tarifa_indexada",
+  "documentation": "https://github.com/MiguelAngelLV/tarifa_20td",
   "requirements": ["holidays==0.18.0"],
   "ssdp": [],
   "zeroconf": [],
