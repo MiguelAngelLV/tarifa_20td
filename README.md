@@ -28,3 +28,8 @@ Así mismo, puedes añadir una nueva línea de consumo con el sensor _Costes fij
 ## Futuras ideas
 
 Aunque actualmente está muy bajo y apenas supone diferencia, si el coste del mecanismo del gas volviese a subir, me gustaría añadir la opción de incrementar los costes añadiendo a la precio del momento el MAG asociado.
+
+
+## Balance Neto
+
+Si tienes instalación fotovoltaica es posible que te interese mi otro componente [Balance Neto Horario](https://github.com/MiguelAngelLV/balance_neto) para calcular de forma más precia los euros.
