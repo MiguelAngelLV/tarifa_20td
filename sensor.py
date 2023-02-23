@@ -31,7 +31,6 @@ FIXED_DESCRIPTION = SensorEntityDescription(
     key="coste_fijo_20td",
     icon="mdi:currency-eur",
     name="Costes Fijos Totales",
-    device_class=DEVICE_CLASS_MONETARY,
     state_class=STATE_CLASS_TOTAL_INCREASING,
     native_unit_of_measurement="€"
 )
