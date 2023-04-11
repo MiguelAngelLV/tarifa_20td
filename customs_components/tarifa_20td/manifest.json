@@ -1,16 +1,14 @@
 {
   "domain": "tarifa_20td",
   "name": "Tarifa 2.0 TD",
-  "version": "0.1.0",
-  "config_flow": true,
-  "documentation": "https://github.com/MiguelAngelLV/tarifa_20td",
-  "requirements": ["holidays==0.18.0"],
-  "ssdp": [],
-  "zeroconf": [],
-  "homekit": {},
-  "dependencies": [],
   "codeowners": [
     "@miguelangellv"
   ],
-  "iot_class": "local_polling"
+  "config_flow": true,
+  "documentation": "https://github.com/MiguelAngelLV/tarifa_20td",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/MiguelAngelLV/tarifa_20td/issues",
+  "requirements": ["holidays==0.18.0"],
+  "version": "0.1.0"
+
 }
