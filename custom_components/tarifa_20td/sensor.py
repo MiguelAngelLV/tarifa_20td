@@ -1,5 +1,3 @@
-import asyncio
-from datetime import datetime
 from typing import Mapping, Any
 from datetime import datetime, timedelta
 
@@ -71,8 +69,8 @@ class PriceSensor(SensorEntity):
         self._valle = valle
         self._llana = llana
         self._punta = punta
+        self._period = ''
         self._holidays = holidays.ES()
-
         async def update_price_and_schedule(now):
             self.update_price()
             next = now + timedelta(hours=1)
@@ -86,9 +84,12 @@ class PriceSensor(SensorEntity):
     def native_value(self) -> StateType:
         return self._state
 
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        return {'Period': self._period}
+
     async def async_added_to_hass(self) -> None:
         self.update_price()
-
 
     @property
     def should_poll(self):
@@ -99,20 +100,27 @@ class PriceSensor(SensorEntity):
 
         if now in self._holidays or 5 <= now.weekday() <= 6:
             self._state = self._valle
+            self._period = 'P3'
         else:
             hour = now.hour
             if hour < 8:
                 self._state = self._valle
+                self._period = 'P3'
             elif hour < 10:
                 self._state = self._llana
+                self._period = 'P2'
             elif hour < 14:
                 self._state = self._punta
+                self._period = 'P1'
             elif hour < 18:
                 self._state = self._llana
+                self._period = 'P2'
             elif hour < 22:
                 self._state = self._punta
+                self._period = 'P3'
             else:
                 self._state = self._llana
+                self._period = 'P2'
 
         self.async_write_ha_state()
 
@@ -154,7 +162,6 @@ class FixedSensor(SensorEntity, RestoreEntity):
     def update_price(self):
         self._state = float(self._state) + self._coste_dia
         self.async_write_ha_state()
-
 
 
 class DummySensor(SensorEntity):
