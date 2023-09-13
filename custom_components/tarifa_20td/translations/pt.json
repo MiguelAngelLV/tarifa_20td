@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "precio_llana": "Preço de horas por plano",
+          "precio_valle": "Preço de horas por vale",
+          "precio_punta": "Preço de horas por ponta",
+          "coste_dia": "Preço de fixo por dia"
+        }
+      }
+    }
+  },
+
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "precio_llana": "Preço de horas por plano",
+          "precio_valle": "Preço de horas por vale",
+          "precio_punta": "Preço de horas por ponta",
+          "coste_dia": "Preço de fixo por dia"
+        }
+      }
+    }
+  }
+}
