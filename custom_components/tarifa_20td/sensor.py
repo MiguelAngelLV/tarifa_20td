@@ -117,7 +117,7 @@ class PriceSensor(SensorEntity):
                 self._period = 'P2'
             elif hour < 22:
                 self._state = self._punta
-                self._period = 'P3'
+                self._period = 'P1'
             else:
                 self._state = self._llana
                 self._period = 'P2'
