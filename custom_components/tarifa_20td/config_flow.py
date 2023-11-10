@@ -30,7 +30,7 @@ SCHEMA = vol.Schema(
             NumberSelectorConfig(min=0, max=1, step="any", unit_of_measurement="€/kWh", mode=NumberSelectorMode.BOX)
         ),
         vol.Required(CONF_DIA): NumberSelector(
-            NumberSelectorConfig(min=0, max=3, step="any", unit_of_measurement="€/dia", mode=NumberSelectorMode.BOX)
+            NumberSelectorConfig(min=0, max=10, step="any", unit_of_measurement="€/dia", mode=NumberSelectorMode.BOX)
         )
     }
 )
@@ -103,7 +103,7 @@ class OptionFlowHandler(config_entries.OptionsFlow):
                                          mode=NumberSelectorMode.BOX)
                 ),
                 vol.Required(CONF_DIA, default=float(dia)): NumberSelector(
-                    NumberSelectorConfig(min=0, max=3, step="any", unit_of_measurement="€/dia",
+                    NumberSelectorConfig(min=0, max=10, step="any", unit_of_measurement="€/dia",
                                          mode=NumberSelectorMode.BOX)
                 )
             }
