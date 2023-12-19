@@ -8,7 +8,7 @@
   "documentation": "https://github.com/MiguelAngelLV/tarifa_20td",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/MiguelAngelLV/tarifa_20td/issues",
-  "requirements": ["holidays==0.18.0"],
+  "requirements": ["holidays>=0.18.0"],
   "version": "1.1.0"
 
 }
