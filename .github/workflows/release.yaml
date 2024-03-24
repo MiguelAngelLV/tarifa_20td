@@ -26,9 +26,6 @@ jobs:
           yq e -P -o=json \
             -i ".version = \"${version}\"" \
             "${{ github.workspace }}/custom_components/tarifa_20td/manifest.json"
-          yq e -P -o=json \
-            -i ".version = \"${version}\"" \
-            "${{ github.workspace }}/custom_components/tarifa_20td/integrations/tarifa_20td_inverse/manifest.json"
 
       - name: 📦 Created zipped release package
         shell: bash
