@@ -8,7 +8,7 @@ on:
 
 jobs:
   release:
-    name: Release the Spook! 👻
+    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,23 +25,23 @@ jobs:
           version="${version#v}"
           yq e -P -o=json \
             -i ".version = \"${version}\"" \
-            "${{ github.workspace }}/custom_components/tariff_20td/manifest.json"
+            "${{ github.workspace }}/custom_components/tarifa_20td/manifest.json"
           yq e -P -o=json \
             -i ".version = \"${version}\"" \
-            "${{ github.workspace }}/custom_components/tariff_20td/integrations/tariff_20td_inverse/manifest.json"
+            "${{ github.workspace }}/custom_components/tarifa_20td/integrations/tarifa_20td_inverse/manifest.json"
 
       - name: 📦 Created zipped release package
         shell: bash
         run: |
-          cd "${{ github.workspace }}/custom_components/tariff_20td"
-          zip tariff_20td.zip -r ./
+          cd "${{ github.workspace }}/custom_components/tarifa_20td"
+          zip tarifa_20td.zip -r ./
 
       - name: 🔏 Sign release package
         uses: sigstore/gh-action-sigstore-python@v2.1.1
         with:
-          inputs: ${{ github.workspace }}/custom_components/tariff_20td/tariff_20td.zip
+          inputs: ${{ github.workspace }}/custom_components/tarifa_20td/tarifa_20td.zip
 
       - name: ⬆️ Upload zip to release
         uses: softprops/action-gh-release@v2.0.4
         with:
-          files: ${{ github.workspace }}/custom_components/tariff_20td/tariff_20td.zip
+          files: ${{ github.workspace }}/custom_components/tarifa_20td/tarifa_20td.zip
