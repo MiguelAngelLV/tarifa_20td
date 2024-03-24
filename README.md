@@ -23,17 +23,16 @@ En el siguiente paso, deberemos indicar el coste diario y los precios de cada un
 El coste fijo por día se refiere a costes fijos no dependientes del consumo. Normalmente este coste suele incluir potencia, bono social y alguna cuota. Lo más fácil es buscar
 la última factura y dividir estos costes fijos por el número de días e introducir el resultado.
 
-
 ## Uso
+
 Una vez configurado el componente, en el panel de energía añade tu sensor de energía consumida total e indica que quieres realizar el control de costes usando una entidad con el
 precio actual seleccionado _Precio kWh_ como entidad.
 
-Así mismo, puedes añadir una nueva línea de consumo con el sensor _Costes fijos_ (que siempre valdrá 0) y en sus costes configurar _Usar una entidad que realiza un seguimiento de 
+Así mismo, puedes añadir una nueva línea de consumo con el sensor _Costes fijos_ (que siempre valdrá 0) y en sus costes configurar _Usar una entidad que realiza un seguimiento de
 los costes totales_ seleccionando _Costes Fijos Totales_, de esta forma cada día añadirá el coste fijo y así tener una idea más cercana del precio final.
 
 Además, el sensor `sensor.precio_kWh` dispone del atributo «Period» con el periodo actual (P1 = punta, P2 = llana, P3 = valle para el caso de 2.0, o de P1 a P6 para 3.0),
 que puede utilizarse para automatizaciones.
-
 
 ## Balance Neto
 

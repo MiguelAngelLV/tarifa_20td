@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
     from homeassistant.helpers.typing import StateType
 
-TIMEZONE = pytz.timezone('Europe/Madrid')
+TIMEZONE = pytz.timezone("Europe/Madrid")
 
 TARIFF_TD_DESCRIPTION = SensorEntityDescription(
     key="precio_20td",
@@ -65,7 +65,7 @@ DUMMY_DESCRIPTION = SensorEntityDescription(
 
 
 async def async_setup_entry(
-        hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Configure and add sensors to Home Assistant."""
     p1 = float(entry.data.get(CONF_P1, 0))
@@ -95,7 +95,11 @@ class TariffTDSensor(SensorEntity):
     """Create a sensor with actual price per kWh and period from spanish Tariff TD."""
 
     def __init__(
-            self, description: SensorEntityDescription, tariff: TariffTD, hass: HomeAssistant, unique: str
+        self,
+        description: SensorEntityDescription,
+        tariff: TariffTD,
+        hass: HomeAssistant,
+        unique: str,
     ) -> None:
         """Initialise values."""
         super().__init__()
@@ -125,17 +129,14 @@ class TariffTDSensor(SensorEntity):
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
         return {"Period": self._tariff.get_period(datetime.now(tz=TIMEZONE))}
 
-
     @override
     async def async_added_to_hass(self) -> None:
         self.update_price()
-
 
     @property
     @override
     def should_poll(self) -> bool:
         return False
-
 
     def update_price(self) -> None:
         """Update the price each hour."""
@@ -147,7 +148,11 @@ class FixedSensor(SensorEntity, RestoreEntity):
     """Calculate the fixed cost per day and generate a sensor with total cost."""
 
     def __init__(
-            self, description: SensorEntityDescription, cost_per_day: float, hass: HomeAssistant, unique: str
+        self,
+        description: SensorEntityDescription,
+        cost_per_day: float,
+        hass: HomeAssistant,
+        unique: str,
     ) -> None:
         """Initialise values."""
         super().__init__()

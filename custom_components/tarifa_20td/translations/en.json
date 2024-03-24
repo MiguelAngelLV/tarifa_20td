@@ -14,7 +14,7 @@
           "diary_cost": "Coste diario"
         }
       },
-       "tariff30": {
+      "tariff30": {
         "data": {
           "P1": "Precio P1",
           "P2": "Precio P2",
@@ -30,7 +30,7 @@
 
   "options": {
     "step": {
-     "init": {
+      "init": {
         "data": {
           "tariff": "Tarifa"
         }
@@ -43,7 +43,7 @@
           "diary_cost": "Coste diario"
         }
       },
-       "tariff30": {
+      "tariff30": {
         "data": {
           "P1": "Precio P1",
           "P2": "Precio P2",

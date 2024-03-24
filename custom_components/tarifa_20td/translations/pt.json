@@ -14,7 +14,7 @@
           "diary_cost": "Preço de fixo por dia"
         }
       },
-       "tariff30": {
+      "tariff30": {
         "data": {
           "P1": "Preço P1",
           "P2": "Preço P2",
@@ -30,7 +30,7 @@
 
   "options": {
     "step": {
-     "init": {
+      "init": {
         "data": {
           "tariff": "Tarifa"
         }
@@ -43,7 +43,7 @@
           "diary_cost": "Preço de fixo por dia"
         }
       },
-       "tariff30": {
+      "tariff30": {
         "data": {
           "P1": "Preço P1",
           "P2": "Preço P2",

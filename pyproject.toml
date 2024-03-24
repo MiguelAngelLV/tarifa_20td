@@ -12,8 +12,11 @@ python = ">=3.11,<3.13"
 homeassistant = ">=2024.2.0"
 tariff-td = ">=1.0"
 
-[tool.poetry.dev-dependencies]
-pre-commit = ">=2.2.0"
+[tool.poetry.group.dev.dependencies]
+pre-commit = "3.6.2"
+pre-commit-hooks = "4.5.0"
+pylint = "3.1.0"
+ruff = "0.3.4"
 
 [build-system]
 requires = ["poetry-core"]

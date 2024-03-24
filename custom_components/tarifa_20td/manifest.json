@@ -1,9 +1,7 @@
 {
   "domain": "tarifa_20td",
   "name": "Tarifa 2.0 TD",
-  "codeowners": [
-    "@miguelangellv"
-  ],
+  "codeowners": ["@miguelangellv"],
   "config_flow": true,
   "documentation": "https://github.com/MiguelAngelLV/tarifa_20td",
   "iot_class": "local_polling",
