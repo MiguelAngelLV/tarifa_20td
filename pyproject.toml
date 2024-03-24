@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "tarifa_20td"
+version = "2.0"
+description = "Componente para Home Assisant para usuarios con Tarifas 2.0 y 3.0 TD"
+authors = ["Miguel Ángel López <miguel.angel.lopez.vicente@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/miguelangellv/tarifa_20td"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+homeassistant = ">=2024.2.0"
+tariff-td = ">=1.0"
+
+[tool.poetry.dev-dependencies]
+pre-commit = ">=2.2.0"
+
+[tool.isort]
+profile = "black"
+line_lenght = 160
+force_sort_within_sections = true
+known_first_party = ["homeassistant"]
+combine_as_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

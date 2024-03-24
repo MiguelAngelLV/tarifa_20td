@@ -1,14 +1,22 @@
 from typing import Mapping, Any
 from datetime import datetime, timedelta
-
-import holidays
-
+from tariff_td import TariffTD, Tariff30TD, Tariff20TD
+from .const import (
+    CONF_P1,
+    CONF_P2,
+    CONF_P3,
+    CONF_P4,
+    CONF_P5,
+    CONF_P6,
+    CONF_DIARY_COST,
+    CONF_TARIFF,
+    TARIFF_20
+)
 from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
-    DEVICE_CLASS_MONETARY,
-    STATE_CLASS_TOTAL_INCREASING,
-    DEVICE_CLASS_ENERGY,
+    SensorStateClass,
+    SensorDeviceClass,
     RestoreEntity
 )
 from homeassistant.config_entries import ConfigEntry
@@ -17,11 +25,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.event import async_track_point_in_time
 
-PRICE_DESCRIPTION = SensorEntityDescription(
+TARIFF_TD_DESCRIPTION = SensorEntityDescription(
     key="precio_20td",
     icon="mdi:currency-eur",
     name="Precio kWh",
-    device_class=DEVICE_CLASS_MONETARY,
+    device_class=SensorDeviceClass.MONETARY,
     native_unit_of_measurement="€/kWh"
 )
 
@@ -29,7 +37,7 @@ FIXED_DESCRIPTION = SensorEntityDescription(
     key="coste_fijo_20td",
     icon="mdi:currency-eur",
     name="Costes Fijos Totales",
-    state_class=STATE_CLASS_TOTAL_INCREASING,
+    state_class=SensorStateClass.TOTAL_INCREASING,
     native_unit_of_measurement="€"
 )
 
@@ -37,8 +45,8 @@ DUMMY_DESCRIPTION = SensorEntityDescription(
     key="coste_fijo_kwh",
     icon="mdi:currency-eur",
     name="Costes Fijos",
-    device_class=DEVICE_CLASS_ENERGY,
-    state_class=STATE_CLASS_TOTAL_INCREASING,
+    device_class=SensorDeviceClass.ENERGY,
+    state_class=SensorStateClass.TOTAL_INCREASING,
     native_unit_of_measurement="kWh"
 )
 
@@ -46,35 +54,38 @@ DUMMY_DESCRIPTION = SensorEntityDescription(
 async def async_setup_entry(
         hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    valle = float(entry.data['precio_valle'])
-    llana = float(entry.data['precio_llana'])
-    punta = float(entry.data['precio_punta'])
-    coste_dia = float(entry.data['coste_dia'])
+    p1 = float(entry.data.get(CONF_P1, 0))
+    p2 = float(entry.data.get(CONF_P2, 0))
+    p3 = float(entry.data.get(CONF_P3, 0))
+    p4 = float(entry.data.get(CONF_P4, 0))
+    p5 = float(entry.data.get(CONF_P5, 0))
+    p6 = float(entry.data.get(CONF_P6, 0))
+    tariff = entry.data[CONF_TARIFF]
+    diary = float(entry.data.get(CONF_DIARY_COST, 0))
 
-    price_sensor = PriceSensor(PRICE_DESCRIPTION, valle, llana, punta, hass)
-    fixed_sensor = FixedSensor(FIXED_DESCRIPTION, coste_dia, hass)
-    dummy_sensor = DummySensor(DUMMY_DESCRIPTION)
-    async_add_entities([price_sensor, fixed_sensor, dummy_sensor])
+    tariff_td = Tariff20TD(p1, p2, p3) if tariff == TARIFF_20 else Tariff30TD(p1, p2, p3, p4, p5, p6)
+
+    dummy_sensor = DummySensor(DUMMY_DESCRIPTION, entry.entry_id)
+    fixed_sensor = FixedSensor(FIXED_DESCRIPTION, diary, hass, entry.entry_id)
+    tariff_sensor = TariffTDSensor(TARIFF_TD_DESCRIPTION, tariff_td, hass, entry.entry_id)
+    async_add_entities([fixed_sensor, dummy_sensor, tariff_sensor])
 
 
-class PriceSensor(SensorEntity):
+class TariffTDSensor(SensorEntity):
 
-    def __init__(self, description: SensorEntityDescription, valle: float, llana: float, punta: float, hass) -> None:
+    def __init__(self, description: SensorEntityDescription, tariff: TariffTD, hass, unique: str) -> None:
         super().__init__()
         self._state = None
         self._attrs: Mapping[str, Any] = {}
         self._attr_name = description.name
-        self._attr_unique_id = description.key
+        self._attr_unique_id = f"{unique}-{description.key}"
         self.entity_description = description
-        self._valle = valle
-        self._llana = llana
-        self._punta = punta
-        self._period = ''
-        self._holidays = holidays.ES()
-        async def update_price_and_schedule(now):
+        self._tariff = tariff
+
+        async def update_price_and_schedule(time):
             self.update_price()
-            next = now + timedelta(hours=1)
-            async_track_point_in_time(hass, update_price_and_schedule, next)
+            next_update = time + timedelta(hours=1)
+            async_track_point_in_time(hass, update_price_and_schedule, next_update)
 
         now = datetime.now()
         next = now.replace(minute=0, second=0) + timedelta(hours=1)
@@ -86,7 +97,7 @@ class PriceSensor(SensorEntity):
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
-        return {'Period': self._period}
+        return {'Period': self._tariff.get_period()}
 
     async def async_added_to_hass(self) -> None:
         self.update_price()
@@ -96,45 +107,20 @@ class PriceSensor(SensorEntity):
         return False
 
     def update_price(self):
-        now = datetime.now()
-
-        if now in self._holidays or 5 <= now.weekday() <= 6:
-            self._state = self._valle
-            self._period = 'P3'
-        else:
-            hour = now.hour
-            if hour < 8:
-                self._state = self._valle
-                self._period = 'P3'
-            elif hour < 10:
-                self._state = self._llana
-                self._period = 'P2'
-            elif hour < 14:
-                self._state = self._punta
-                self._period = 'P1'
-            elif hour < 18:
-                self._state = self._llana
-                self._period = 'P2'
-            elif hour < 22:
-                self._state = self._punta
-                self._period = 'P1'
-            else:
-                self._state = self._llana
-                self._period = 'P2'
-
+        self._state = self._tariff.get_price()
         self.async_write_ha_state()
 
 
 class FixedSensor(SensorEntity, RestoreEntity):
 
-    def __init__(self, description: SensorEntityDescription, coste_dia, hass) -> None:
+    def __init__(self, description: SensorEntityDescription, cost_per_day, hass, unique: str) -> None:
         super().__init__()
         self._state = 0
         self._attrs: Mapping[str, Any] = {}
         self._attr_name = description.name
-        self._attr_unique_id = description.key
+        self._attr_unique_id = f"{unique}-{description.key}"
         self.entity_description = description
-        self._coste_dia = coste_dia
+        self._cost_per_day = cost_per_day
 
         async def update_cost_and_schedule(now):
             self.update_price()
@@ -160,18 +146,18 @@ class FixedSensor(SensorEntity, RestoreEntity):
         return False
 
     def update_price(self):
-        self._state = float(self._state) + self._coste_dia
+        self._state = float(self._state) + self._cost_per_day
         self.async_write_ha_state()
 
 
 class DummySensor(SensorEntity):
 
-    def __init__(self, description: SensorEntityDescription) -> None:
+    def __init__(self, description: SensorEntityDescription, unique) -> None:
         super().__init__()
         self._state = 0
         self._attrs: Mapping[str, Any] = {}
         self._attr_name = description.name
-        self._attr_unique_id = description.key
+        self._attr_unique_id = f"{unique}-{description.key}"
         self.entity_description = description
 
     @property
