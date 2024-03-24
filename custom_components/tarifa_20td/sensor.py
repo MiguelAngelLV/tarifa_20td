@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Mapping, override
+from typing import TYPE_CHECKING, Any, Mapping
 
 import pytz
 from tariff_td import Tariff20TD, Tariff30TD, TariffTD
+from typing_extensions import override
 
 from homeassistant.components.sensor import (
     RestoreEntity,
