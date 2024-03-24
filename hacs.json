@@ -2,5 +2,7 @@
   "name": "Tarifa 2.0 TD",
   "render_readme": true,
   "homeassistant": "2023.1.0",
-  "country": "ES"
+  "country": "ES",
+  "zip_release": true,
+  "filename": "tarifa_20td.zip"
 }
