@@ -77,10 +77,10 @@ async def async_setup_entry(
     tariff = entry.data[CONF_TARIFF]
     diary = float(entry.data.get(CONF_DIARY_COST, 0))
 
-    tariff_td = (
-        Tariff20TD(p1, p2, p3)
+    tariff_td = await (
+        hass.async_add_executor_job(Tariff20TD, p1, p2, p3)
         if tariff == TARIFF_20
-        else Tariff30TD(p1, p2, p3, p4, p5, p6)
+        else hass.async_add_executor_job(Tariff30TD, p1, p2, p3, p4, p5, p6)
     )
 
     dummy_sensor = DummySensor(DUMMY_DESCRIPTION, entry.entry_id)
