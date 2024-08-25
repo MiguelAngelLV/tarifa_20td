@@ -38,6 +38,9 @@ los costes totales_ seleccionando _Costes Fijos Totales_, de esta forma cada dí
 Además, el sensor `sensor.precio_kWh` dispone del atributo «Period» con el periodo actual (P1 = punta, P2 = llana, P3 = valle para el caso de 2.0, o de P1 a P6 para 3.0),
 que puede utilizarse para automatizaciones.
 
+## Videotutorial
+[![Videotutorial](https://img.youtube.com/vi/BdZdz-7Du_Q/0.jpg)](https://www.youtube.com/watch?v=BdZdz-7Du_Q "Videotutorial")
+
 ## Balance Neto
 
 Si tienes instalación fotovoltaica es posible que te interese mi otro componente [Balance Neto Horario](https://github.com/MiguelAngelLV/balance_neto) para calcular de forma más precia los euros.
