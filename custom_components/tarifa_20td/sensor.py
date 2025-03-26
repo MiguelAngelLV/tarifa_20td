@@ -64,9 +64,7 @@ DUMMY_DESCRIPTION = SensorEntityDescription(
 )
 
 
-async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
-) -> None:
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
     """Configure and add sensors to Home Assistant."""
     p1 = float(entry.data.get(CONF_P1, 0))
     p2 = float(entry.data.get(CONF_P2, 0))
@@ -85,9 +83,7 @@ async def async_setup_entry(
 
     dummy_sensor = DummySensor(DUMMY_DESCRIPTION, entry.entry_id)
     fixed_sensor = FixedSensor(FIXED_DESCRIPTION, diary, hass, entry.entry_id)
-    tariff_sensor = TariffTDSensor(
-        TARIFF_TD_DESCRIPTION, tariff_td, hass, entry.entry_id
-    )
+    tariff_sensor = TariffTDSensor(TARIFF_TD_DESCRIPTION, tariff_td, hass, entry.entry_id)
     async_add_entities([fixed_sensor, dummy_sensor, tariff_sensor])
 
 
@@ -127,7 +123,15 @@ class TariffTDSensor(SensorEntity):
     @property
     @override
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
-        return {"Period": self._tariff.get_period(datetime.now(tz=TIMEZONE))}
+        now = datetime.now(tz=TIMEZONE)
+        attributes = {"Period": self._tariff.get_period(now)}
+        prices = self._tariff.get_day_prices(datetime.now())
+        attributes["max_price"] = max(prices)
+        attributes["min_price"] = min(prices)
+        for i, price in enumerate(prices):
+            attributes[f"price_{i:02d}h"] = price
+
+        return attributes
 
     @override
     async def async_added_to_hass(self) -> None:

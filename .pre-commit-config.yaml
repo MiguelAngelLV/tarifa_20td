@@ -54,7 +54,7 @@ repos:
         pass_filenames: false
         always_run: true
         args:
-          - --branch=mainsudo
+          - --branch=main
       - id: poetry
         name: 📜 Check pyproject with Poetry
         language: system

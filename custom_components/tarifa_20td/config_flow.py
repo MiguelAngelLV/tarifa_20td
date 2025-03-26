@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from typing_extensions import override
 import voluptuous as vol
@@ -50,11 +50,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     @override
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionFlowHandler:
-        return OptionFlowHandler(config_entry)
+        return OptionFlowHandler()
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    @override
+    def is_matching(self, other_flow: Self) -> bool:
+        return False
+
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Config flow of Tariff TD."""
         if user_input is not None:
             self.tariff = user_input[CONF_TARIFF]
@@ -68,12 +70,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_TARIFF): SelectSelector(
                     SelectSelectorConfig(
                         options=[
-                            SelectOptionDict(
-                                value=TARIFF_20, label="Tarifa 2.0 TD (3 periodos)"
-                            ),
-                            SelectOptionDict(
-                                value=TARIFF_30, label="Tarifa 3.0 TD (6 periodos)"
-                            ),
+                            SelectOptionDict(value=TARIFF_20, label="Tarifa 2.0 TD (3 periodos)"),
+                            SelectOptionDict(value=TARIFF_30, label="Tarifa 3.0 TD (6 periodos)"),
                         ]
                     )
                 )
@@ -81,9 +79,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
         return self.async_show_form(step_id="user", data_schema=schema)
 
-    async def async_step_tariff20(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    async def async_step_tariff20(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Form configuration for Tariff 2.0 TD."""
         if user_input is not None:
             user_input[CONF_TARIFF] = self.tariff
@@ -129,9 +125,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(step_id="tariff20", data_schema=vol.Schema(schema))
 
-    async def async_step_tariff30(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    async def async_step_tariff30(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Form configuration for Tariff 3.0 TD."""
         if user_input is not None:
             user_input[CONF_TARIFF] = self.tariff
@@ -210,13 +204,11 @@ class OptionFlowHandler(config_entries.OptionsFlow):
 
     tariff = TARIFF_20
 
-    def __init__(self, config_entry: ConfigEntry) -> None:
-        """Initialise values."""
-        self.config_entry = config_entry
+    @property
+    def config_entry(self):
+        return self.hass.config_entries.async_get_entry(self.handler)
 
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Tariff TD selector form."""
         if user_input is not None:
             self.tariff = user_input[CONF_TARIFF]
@@ -232,12 +224,8 @@ class OptionFlowHandler(config_entries.OptionsFlow):
                 vol.Required(CONF_TARIFF, default=tariff): SelectSelector(
                     SelectSelectorConfig(
                         options=[
-                            SelectOptionDict(
-                                value=TARIFF_20, label="Tarifa 2.0 TD (3 periodos)"
-                            ),
-                            SelectOptionDict(
-                                value=TARIFF_30, label="Tarifa 3.0 TD (6 periodos)"
-                            ),
+                            SelectOptionDict(value=TARIFF_20, label="Tarifa 2.0 TD (3 periodos)"),
+                            SelectOptionDict(value=TARIFF_30, label="Tarifa 3.0 TD (6 periodos)"),
                         ]
                     )
                 )
@@ -245,9 +233,7 @@ class OptionFlowHandler(config_entries.OptionsFlow):
         )
         return self.async_show_form(step_id="init", data_schema=schema)
 
-    async def async_step_tariff20(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    async def async_step_tariff20(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Form configuration for Tariff 2.0 TD."""
         if user_input is not None:
             user_input[CONF_TARIFF] = self.tariff
@@ -298,9 +284,7 @@ class OptionFlowHandler(config_entries.OptionsFlow):
 
         return self.async_show_form(step_id="tariff20", data_schema=vol.Schema(schema))
 
-    async def async_step_tariff30(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    async def async_step_tariff30(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Form configuration for Tariff 3.0 TD."""
         if user_input is not None:
             user_input[CONF_TARIFF] = self.tariff
