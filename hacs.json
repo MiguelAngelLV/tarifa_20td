@@ -3,6 +3,5 @@
   "render_readme": true,
   "homeassistant": "2023.1.0",
   "country": "ES",
-  "zip_release": true,
   "filename": "tarifa_20td.zip"
 }
