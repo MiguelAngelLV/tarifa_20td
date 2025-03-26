@@ -6,6 +6,6 @@
   "documentation": "https://github.com/MiguelAngelLV/tarifa_20td",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/MiguelAngelLV/tarifa_20td/issues",
-  "requirements": ["tariff-td==1.0"],
-  "version": "0.0.0"
+  "requirements": ["tariff-td==1.1"],
+  "version": "2.1.0"
 }

@@ -45,9 +45,7 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
 async def _async_update_options(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
     """Handle options update."""
     # update entry replacing data with new options
-    hass.config_entries.async_update_entry(
-        config_entry, data={**config_entry.data, **config_entry.options}
-    )
+    hass.config_entries.async_update_entry(config_entry, data={**config_entry.data, **config_entry.options})
     await hass.config_entries.async_reload(config_entry.entry_id)
 
 
@@ -72,9 +70,7 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
         def _async_migrator(entity_entry: er.RegistryEntry) -> dict[str, str]:
             old_unique_id = entity_entry.unique_id
             new_unique_id = f"{entity_entry.config_entry_id}-{old_unique_id}"
-            _LOGGER.debug(
-                "Updating unique_id from %s to %s", old_unique_id, new_unique_id
-            )
+            _LOGGER.debug("Updating unique_id from %s to %s", old_unique_id, new_unique_id)
             return {"new_unique_id": new_unique_id}
 
         await er.async_migrate_entries(hass, config_entry.entry_id, _async_migrator)
